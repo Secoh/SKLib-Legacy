@@ -38,6 +38,7 @@ if [ -z "$1" -o "$1" == "-HELP" ]; then
   echo " -LINT    - Use extended portability warnings"
   echo " -KEEP    - Do not delete previous compile_history file"
   echo " -NOLIBS  - Do not search for lib directories, use only those expressly given"
+  echo " -NOINTEL - Remove CPU-optimization options for Intel-compatible processors"
   exit
 fi
 
@@ -60,10 +61,11 @@ COMP_OPT=yes
 COMP_DLL=
 COMP_KEEP=
 COMP_LIBS=yes
+COMP_INTEL=yes
 
 GCCLINT="-pedantic -Wall -W -Wshadow -Wconversion -Wcast-qual"    # extended source check
 
-while [ ${1:0:1} == "-" ]; do
+while [ "${1:0:1}" == "-" ]; do
   if   [ $1 == "-HELP" ]; then echo "Option -HELP must be the only \"parameter\" in command line"; exit 1;
   elif [ $1 == "-ZIO" ]; then COMP_ZIO=yes;
   elif [ $1 == "-MAT" ]; then COMP_MAT=yes;
@@ -72,9 +74,9 @@ while [ ${1:0:1} == "-" ]; do
   elif [ $1 == "-LINT" ]; then COMP_LINT=yes;
   elif [ $1 == "-KEEP" ]; then COMP_KEEP=yes;
   elif [ $1 == "-NOLIBS" ]; then COMP_LIBS=;
+  elif [ $1 == "-NOINTEL" ]; then COMP_INTEL=;
   else GCCOPT="$GCCOPT${GCCOPT:+ }$1"; fi
   shift;
-  if [ -z "$1" ]; then echo Target name must not be empty; exit 1; fi
 done
 
 if [ -n "$COMP_MAT" -a -n "$COMP_DLL" ]; then echo Use of MATLAB support inside loadable module is not supported; exit 1; fi
@@ -82,11 +84,13 @@ if [ -n "$COMP_MAT" -a -n "$COMP_DLL" ]; then echo Use of MATLAB support inside 
 if [ -n "$COMP_OPT" ]; then GCCOPT="$GCCOPT${GCCOPT:+ }-O3"; fi
 if [ -n "$COMP_LINT" ]; then GCCOPT="$GCCOPT${GCCOPT:+ }$GCCLINT"; fi
 if [ -n "$COMP_DLL" ]; then GCCOPT="$GCCOPT${GCCOPT:+ }-fPIC"; fi
+if [ -n "$COMP_INTEL" ]; then GCCOPT="$GCCOPT${GCCOPT:+ }-msse3"; fi
 
 export GCCOPT
 
 # check Targer
 
+if [ -z "$1" ]; then echo Target name must not be empty; exit 1; fi
 TARGET=$1
 shift
 
@@ -146,7 +150,7 @@ compile_proc ()
       if [ -n "$VARIPATH" ]; then echo $z; else echo ${z##*/}; fi
 
       cd $z
-      ( g++ $GCCOPT -msse3 -c `ls | egrep '.*\.(cpp|c)$'`; if [ $? -ne 0 ]; then date > $TDIR/compile_has_error.txt; fi ) 2>&1 | tee $TDIR/_collect_outp_tmp.txt
+      ( g++ $GCCOPT -c `ls | egrep '.*\.(cpp|c)$'`; if [ $? -ne 0 ]; then date > $TDIR/compile_has_error.txt; fi ) 2>&1 | tee $TDIR/_collect_outp_tmp.txt
       rm stdafx.o 2> /dev/null
 
       if [ -n "$VARIPATH" ]; then
@@ -185,7 +189,7 @@ if [ -n "$COMP_MAT" ]; then
   mv mat_read_2D $TARGET 2> /dev/null
   cd $CURDIR
 elif [ -n "$COMP_DLL" ]; then
-  TARGETSO=`awk '{ print gensub(/\.[^/.]*$/,"",1,$1)".so"; }' <<< $TARGET`
+  TARGETSO=`awk '{ gsub(/\.[^\/\.]*$/,""); print $0".so"; }' <<< $TARGET`
   g++ -shared $GCCOPT -pthread -ldl -Wl,-soname,$TARGETSO.1 -o $TARGETSO $TDIR/*.o 2>&1 | tee $TDIR/compile_history_1.txt
 else
   g++ $GCCOPT -rdynamic -pthread -ldl -o $TARGET $TDIR/*.o 2>&1 | tee $TDIR/compile_history_1.txt
