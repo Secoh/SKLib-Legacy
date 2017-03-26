@@ -8,12 +8,12 @@ mkdir $EXE 2>/dev/null
 rm $EXE/* 2>/dev/null
 rm $EXE/compile_history.txt 2>/dev/null
 
-sh ../../compile.sh -KEEP -NOLIBS -DSTANDALONE_EXAMPLE -DLL $EXE/dll_main_sample   dll_main_sample  ../../lib_dll
-sh ../../compile.sh -KEEP -NOLIBS -DSTANDALONE_EXAMPLE -DLL $EXE/dll.offender.dll  dll_offender/    ../../lib_dll
-sh ../../compile.sh -KEEP -NOLIBS -DSTANDALONE_EXAMPLE -DLL $EXE/dll.sample.2.     dll_sample_2     ../../lib_dll/
-sh ../../compile.sh -KEEP -NOLIBS -DSTANDALONE_EXAMPLE -DLL $EXE/dll_supplement.so dll_supplement/  ../../lib_dll/
-sh ../../compile.sh -KEEP -NOLIBS -DSTANDALONE_EXAMPLE -DLL $EXE/dll_twist         dll_twist/       ../../lib_dll
-sh ../../compile.sh -KEEP -NOLIBS -DSTANDALONE_EXAMPLE      $EXE/top_level_caller  top_level_caller ../../lib_dll
+bash ../../compile.sh -KEEP -NOLIBS -NOINTEL -DSTANDALONE_EXAMPLE -DLL $EXE/dll_main_sample   dll_main_sample  ../../lib_dll
+bash ../../compile.sh -KEEP -NOLIBS -NOINTEL -DSTANDALONE_EXAMPLE -DLL $EXE/dll.offender.dll  dll_offender/    ../../lib_dll
+bash ../../compile.sh -KEEP -NOLIBS -NOINTEL -DSTANDALONE_EXAMPLE -DLL $EXE/dll.sample.2.     dll_sample_2     ../../lib_dll/
+bash ../../compile.sh -KEEP -NOLIBS -NOINTEL -DSTANDALONE_EXAMPLE -DLL $EXE/dll_supplement.so dll_supplement/  ../../lib_dll/
+bash ../../compile.sh -KEEP -NOLIBS -NOINTEL -DSTANDALONE_EXAMPLE -DLL $EXE/dll_twist         dll_twist/       ../../lib_dll
+bash ../../compile.sh -KEEP -NOLIBS -NOINTEL -DSTANDALONE_EXAMPLE      $EXE/top_level_caller  top_level_caller ../../lib_dll
 
 # output executables will be in directory designated in EXE variablee (see top of the script)
 # notice compiler script removes extension from the output shared module, and replaces it for .so
