@@ -1,0 +1,11 @@
+lib_dll  
+lib_thread
+#lib_math
+#
+#test_suite
+#vcproj_make_good
+#
+arch.bat
+arch.sh
+compile.sh
+clean_build_tree.bat 

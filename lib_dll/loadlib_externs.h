@@ -8,7 +8,7 @@
 // Software is distributed on "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //
 
-#ifndef DLL_IMPORT_SYMBOLS
+#ifndef SKLIB_DLL_IMPORT_SYMBOLS
 #include "loadlib.h"
 #endif
 

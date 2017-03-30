@@ -8,8 +8,8 @@
 // Software is distributed on "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //
 
-#ifndef DLL_IMPORT_SYMBOLS
-#define DLL_IMPORT_SYMBOLS
+#ifndef SKLIB_DLL_IMPORT_SYMBOLS
+#define SKLIB_DLL_IMPORT_SYMBOLS
 
 // -------------------------------------------------------------------
 // Extra headers for Windows/Linux environment
