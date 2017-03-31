@@ -17,14 +17,14 @@ Modules historically written in C preserve ANSI C compatibility.
 When possible, compatibility with Linux any modern version and GCC 4.4.x or higher is maintained, if not precluded by nature of the program.
 
 Stable projects (relatively):
-   lib_dll
-   lib_thread
-   _texts/stdafx_h_standard_file_contents.txt 
-   ./arch.bat
+   lib_dll;
+   lib_thread;
+   _texts/stdafx_h_standard_file_contents.txt;
+   ./arch.bat;
    ./compile.sh
 
 In development or unusable:
-   lib_common
-   lib_filesys
+   lib_common;
+   lib_filesys;
    ./arch.sh
 
