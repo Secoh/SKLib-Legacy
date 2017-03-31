@@ -9,21 +9,15 @@
 
 #include "stdafx.h"
 
+// -- compatibility block - this normally comes from gcc_port.h
+template<class input_t> inline input_t Max(const input_t &A, const input_t &B) { return !(A<B) ? A : B; }
 #ifdef __GNUC__
 #include<unistd.h>
 #define Sleep(x) (usleep((x)*1000+1))          // we have to include Sleep() replacement for compatibility with GCC/Linux
 #endif
+// -- end of compatibility block
 
 #include "../../mtc.hpp"
-
-
-#ifdef _MSC_VER
-typedef __int64 int64_t;
-#endif
-
-template<class input_t>
-inline input_t Max(const input_t &A, const input_t &B)
-{ return !(A<B) ? A : B; }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -170,9 +164,9 @@ void stat_thread_func(void *args)  // we still need to define the working functi
 class million_th : public local_thread_t
 {
 public:
-    volatile int64_t * volatile V;        // break compiler's optimization by declaring all data memmers volatile
+    volatile int * volatile V;        // break compiler's optimization by declaring all data membmers volatile
     volatile int t;
-    million_th(int64_t *data, int inc) { V=data; t=inc; }           // give it pointer to single global variable to increment
+    million_th(int *data, int inc) { V=data; t=inc; }               // give it pointer to single global variable to increment
     void thread_code() { for (int i=0; i<MILLIONS; i++) (*V)+=t; }  // attempt to write same memory address concurrently
 };
 
@@ -382,14 +376,12 @@ int _tmain(int argc, _TCHAR* argv[])
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 5. Basic example of wrong thread usage (hardware memory conflict)
 
-    int64_t MillionCount = 0;                       // our global counter
+    int MillionCount = 0;                           // our global counter
     million_th **ML = new million_th*[NO_THREADS];  // threads
 
     for (int i=0; i<NO_THREADS; i++) ML[i] = new million_th(&MillionCount, 1);
     for (int i=0; i<NO_THREADS; i++) ML[i]->run();
     million_th::wait_all(ML, NO_THREADS);
-//    for (int i=0; i<NO_THREADS; i++) ML[i]->resume();
-//    million_th::wait_all(ML, NO_THREADS);
 
     printf("Memory Bus Conflict Demo: Expected count=%d; Actual=%d\n", NO_THREADS*MILLIONS, MillionCount);
 
