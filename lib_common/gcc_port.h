@@ -65,6 +65,8 @@ typedef __int64 int64_t;
 typedef __int32 int32_t;
 typedef __int16 int16_t;
 typedef __int8 int8_t;
+#else
+#include"stdint.h"
 #endif
 #endif
 
@@ -91,7 +93,7 @@ typedef uint8_t  __uint8;
 #endif
 
 // 5. Couple cases of different interpretation of standard C library - normalize names to classical form or close
-//    currently normalizes: ftell64, fseek64, atoi64, isnan, stricmp, strnicmp, Sleep
+//    currently includes: ftell64, fseek64, atoi64, isnan, stricmp, strnicmp, Sleep
 
 #if defined(_MSC_VER)
 #define ftell64 _ftelli64
@@ -113,9 +115,15 @@ typedef uint8_t  __uint8;
 #define __max(a,b) (((a)>(b)) ? (a) : (b))    // unsafe macros, look below for OK replacement
 #define __min(a,b) (((a)<(b)) ? (a) : (b))
 #endif
+#define Sleep(x) (usleep((x)*1000+1))	// useful
+#endif
+
+// TCHAR-related stuff must go away in GCC/Linux
+
+#ifdef __GNUC__
 #define _TCHAR char
 #define _tmain main
-#define Sleep(x) (usleep((x)*1000+1))	// useful
+#define _ttoi atoi
 #endif
 
 // 6. What do we do with bad code?
