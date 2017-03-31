@@ -147,21 +147,29 @@ compile_proc ()
 {
   CURDIR=`pwd`
   for z in "$@"; do
-      if [ -n "$VARIPATH" ]; then echo $z; else echo ${z##*/}; fi
-
       cd $z
-      ( g++ $GCCOPT -c `ls | egrep '.*\.(cpp|c)$'`; if [ $? -ne 0 ]; then date > $TDIR/compile_has_error.txt; fi ) 2>&1 | tee $TDIR/_collect_outp_tmp.txt
-      rm stdafx.o 2> /dev/null
+      CLIST=`ls | egrep '.*\.(cpp|c)$'`
 
-      if [ -n "$VARIPATH" ]; then
-        for u in `ls *.o`; do mv $u $TDIR/`sed -e 'sQ/Q_Qg' <<< $z`_$u; done
-      else
-        for u in `ls *.o`; do mv $u $TDIR/${z##*/}\_$u; done
+      if [ `wc -w <<< $CLIST` -gt 0 ]; then
+
+          if [ -n "$VARIPATH" ]; then echo $z; else echo ${z##*/}; fi
+
+          cd $z
+          ( g++ $GCCOPT -c $CLIST; if [ $? -ne 0 ]; then date > $TDIR/compile_has_error.txt; fi ) 2>&1 | tee $TDIR/_collect_outp_tmp.txt
+          rm stdafx.o 2> /dev/null
+
+          if [ -n "$VARIPATH" ]; then
+            for u in `ls *.o`; do mv $u $TDIR/`sed -e 'sQ/Q_Qg' <<< $z`_$u; done
+          else
+            for u in `ls *.o`; do mv $u $TDIR/${z##*/}\_$u; done
+          fi
+
+      # else echo Nothing to compile;
       fi
 
       cd $CURDIR
-      cat $TDIR/_collect_outp_tmp.txt >> $TDIR/compile_history.txt
-      rm $TDIR/_collect_outp_tmp.txt
+      cat $TDIR/_collect_outp_tmp.txt >> $TDIR/compile_history.txt 2>/dev/null
+      rm $TDIR/_collect_outp_tmp.txt 2>/dev/null
    done
 }
 

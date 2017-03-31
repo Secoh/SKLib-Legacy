@@ -1,5 +1,8 @@
+_texts
 lib_dll  
 lib_thread
+lib_common
+lib_filesys
 #lib_math
 #
 #test_suite

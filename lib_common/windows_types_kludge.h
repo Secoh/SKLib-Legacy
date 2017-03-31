@@ -5,9 +5,9 @@
 
 #define CONST const
 
-#define WINAPI //__stdcall // doesn't exist in linux
+#define WINAPI
 typedef void *HANDLE;
-#define INVALID_HANDLE_VALUE ((HANDLE)(uint32_t)-1)		// normally, was __uint32
+#define INVALID_HANDLE_VALUE ((HANDLE)-1)
 typedef HANDLE HINSTANCE;
 typedef HINSTANCE HMODULE;
 

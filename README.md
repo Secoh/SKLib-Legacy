@@ -1,15 +1,18 @@
 # SKLib
+
 Windows/Linux Utility Libraries (Common API, UI, Math Functinality, Etc)
 
 All user programs link with lib_<something> libraries, preferrably compiled-in at the same time.
 
-Compatibility:
+Enforcing compatibility:
 
-An effort is made to delay any compatibility issues: to lower-level libraries or to C/C++ compatibility.
-However, the target execution platform is assumed console/command line of Windows XP or higher, C++.
+Library collection resorts, when possible, to the ANSI C and C++ common standard supported by all platforms. "Handy" extensions were deliberately avoided in the code. When common standard doesn't exist and the functionality is too valuable to drop, the wrapper layer is created to hide implementation details from the caller. In all other cases, the functionality is either written from scratch, or left missing.
 
-Compatibility with Linux any modern version and GCC 4.4.x or later is also implied,
-if not precluded by nature of the program and is not prohibitively expensive.
+In very few cases when an utility is needed and establishing compatibility is too expensive, the code is programmed to fail at compilation time.
 
-Language: C++, being considered extension of ANSI C. Try to keep extending aspects rather limited.
-Goal is to keep reasonable backward portability options to plain C.
+Primary target: Windows XP or higher, 32-bit code, C++. Next priority is 32-bit/64-bit comatibility. Next is potential for portability to ANSI C.
+
+Modules historically written in C preserve ANSI C compatibility.
+
+When possible, compatibility with Linux any modern version and GCC 4.4.x or higher is maintained, if not precluded by nature of the program.
+

@@ -34,10 +34,6 @@
 
 #include<wchar.h>     // UTF Initiative
 
-#ifndef __GNUC__
-#include<conio.h>
-#endif
-
 
 // can include or exclude reference to full gcc/Linux portability header
 

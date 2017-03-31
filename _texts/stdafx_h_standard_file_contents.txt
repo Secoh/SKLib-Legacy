@@ -1,0 +1,118 @@
+General stdafx.h file
+-------------------------------
+
+	// stdafx.h : standard headers
+
+#pragma once
+#define _CRT_NONSTDC_NO_DEPRECATE   // no more stupid non-ANSI warnings
+#define _CRT_SECURE_NO_WARNINGS     //
+
+#ifndef _WIN32_WINNT                // (Windows-specific) - former targetver.h contents
+#define _WIN32_WINNT 0x0501   //XP  // The minimum Windows version this program requires to run
+#endif
+
+#define WIN32_LEAN_AND_MEAN
+
+#ifdef _WIN32
+#include <tchar.h>
+#endif
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<time.h>
+#include<ctype.h>
+
+#ifndef _USE_MATH_DEFINES    // Lets use old-stype math.h defines
+#define _USE_MATH_DEFINES    // such as M_PI, M_LOG2E, etc
+#endif
+#include<math.h>
+
+#include<wchar.h>     // UTF Initiative
+
+// can include or exclude reference to full gcc/Linux portability header
+
+#ifndef STANDALONE_EXAMPLE
+#include"../lib_common/gcc_port.h"
+#endif
+
+
+
+Less common entries
+-------------------------------
+
+#include<assert.h>
+#include<limits.h>
+#include<float.h>
+#include<errno.h>
+
+#ifndef __GNUC__
+#include<conio.h>
+#endif
+
+
+Uncommon
+-------------------------------
+
+#include<windows.h>
+#include<wincon.h>
+
+#include<excpt.h>
+
+#if defined(__GNUC__)
+#include<dirent.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<signal.h>
+#elif defined(_WIN32)
+#include<io.h>
+#else
+#error Sorry, lib_dir is tested only for Visual Studio and GCC
+#endif
+
+#if defined(_WIN32)
+#include <emmintrin.h>
+#include <mmintrin.h>
+#elif defined(__GNUC__)
+#include <pmmintrin.h>
+#include <xmmintrin.h>
+#else
+#error MMX/SSE intrinsics are supported only for MS Visual Studio 9+ and GCC v4+
+#endif
+
+#include<mmsystem.h>
+
+
+
+Potential
+-----------------------------
+
+// exit error codes
+
+#define EXIT_OK				0
+
+// 0 - normal exit; 1..15 - general error signals
+// bit format: <1:where><3:category><4:item in category>
+
+#define EXIT_FILE			0x10
+#define EXIT_FILE_WRITE			0x11
+#define EXIT_FILE_READ			0x12
+#define EXIT_FILE_FAIL			0x13
+
+#define EXIT_MEMORY			0x20
+#define EXIT_MEMORY_MAJOR		0x21
+#define EXIT_MEMORY_MINOR		0x22
+
+#define EXIT_PARAMS			0x30
+#define EXIT_PARAMS_MALFORMED		0x31
+#define EXIT_PARAMS_NOT_ALLOWED		0x32
+#define EXIT_PARAMS_INCORRECT		0x33
+
+#define EXIT_CHECKS			0x40
+#define EXIT_INTERNAL_CHECK		0x41
+#define EXIT_INTERNAL_CANNOT_HAPPEN	0x42
+#define EXIT_LOGIC_CHECK		0x43
+
+#define EXIT_FROM_MAIN			0
+#define EXIT_FROM_DEEP			0x80
+

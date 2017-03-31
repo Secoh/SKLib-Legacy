@@ -40,7 +40,7 @@
 #endif
 
 
-// we dont use that in this example, compare to lib_dll itself
+// we dont use gcc_port.h in this example, compare to lib_dll itself
 
 //#ifndef STANDALONE_EXAMPLE
 //#include"../lib_common/gcc_port.h"
