@@ -1,12 +1,14 @@
 # SKLib
 
-Windows/Linux Utility Libraries (Common API, UI, Math Functinality, Etc)
+Windows/Linux Utility Libraries (Common API, UI, Math, Etc)
+
+The library collection represents an effort to provide simple functions and declaration for general operations that are frequently needed, and/or missing in the C/C++ standards, and/or too expensive to program each time from scratch.
 
 All user programs link with lib_<something> libraries, preferrably compiled-in at the same time.
 
 Enforcing compatibility:
 
-Library collection resorts, when possible, to the ANSI C and C++ common standard supported by all platforms. "Handy" extensions were deliberately avoided in the code. When common standard doesn't exist and the functionality is too valuable to drop, the wrapper layer is created to hide implementation details from the caller. In all other cases, the functionality is either written from scratch, or left missing.
+The library collection resorts, when possible, to the ANSI C and C++ common standards supported by all platforms. "Handy" extensions were deliberately avoided in the code. When common standard doesn't exist and the functionality is too valuable to drop, the wrapper layer is created to hide implementation details from the caller. In all other cases, the functionality is either written from scratch, or left missing.
 
 In very few cases when an utility is needed and establishing compatibility is too expensive, the code is programmed to fail at compilation time.
 

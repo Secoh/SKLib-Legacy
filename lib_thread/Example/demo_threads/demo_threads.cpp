@@ -173,6 +173,18 @@ public:
 // By the way, this is the reason for the requirement that all variables shall be read-only for all threads except just one.
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Example 6 -- Atomic increment (Does Visual Studio have any sync_add?)
+
+class atomic_th : public local_thread_t
+{
+public:
+    volatile int * volatile V;                      // lets make is exactly same as Example 5...
+    volatile int t;
+    atomic_th(int *data, int inc) { V=data; t=inc; }
+    void thread_code() { for (int i=0; i<MILLIONS; i++) my_atomic_add(V, t); }    // ...except using atomics
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define ARR_SIZE_DEF 10000000
 #define NO_THREADS_DEF 9 //17
@@ -384,6 +396,18 @@ int _tmain(int argc, _TCHAR* argv[])
     million_th::wait_all(ML, NO_THREADS);
 
     printf("Memory Bus Conflict Demo: Expected count=%d; Actual=%d\n", NO_THREADS*MILLIONS, MillionCount);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 6. Compare to atomic add
+
+    ATOMIC_ALIGN int AtomicCount = 0;               // some versions of MSDN says it must be aligned by 32-bit boundary
+    atomic_th **AX = new atomic_th*[NO_THREADS];    // some other versions of MSDN don't say anything on alignment
+
+    for (int i=0; i<NO_THREADS; i++) AX[i] = new atomic_th(&AtomicCount, 1);
+    for (int i=0; i<NO_THREADS; i++) AX[i]->run();
+    atomic_th::wait_all(AX, NO_THREADS);
+
+    printf("Atomic Demo: Expected count=%d; Actual=%d\n", NO_THREADS*MILLIONS, AtomicCount);
 
     //
 
