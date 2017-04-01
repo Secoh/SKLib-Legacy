@@ -18,10 +18,10 @@ ARCHNAME=DevTree
 # Saves items listed in text file $JOBLIST
 # and compresses them into tar+bzip2 archives: $ARCHNAME_date[_ver].tar.bz2
 
-TEMPFA=arch_tempfile1.txt
-TEMPFB=arch_tempfile2.txt
+TEMPFA=arch_tempfile.txt
+#TEMPFB=arch_tempfile2.txt
 
-if [ -e $TEMPFA -o -e $TEMPFB ]; then echo "Error, files $TEMPFA and $TEMPFB must not exist (verify it and delete)."; exit 1; fi
+if [ -e $TEMPFA ]; then echo "Error, file $TEMPFA must not exist (verify it and delete)."; exit 1; fi
 
 if [ ! -f $JOBLIST ]; then
   echo "Error, file $JOBLIST must exist."
@@ -30,45 +30,34 @@ if [ ! -f $JOBLIST ]; then
   exit 1
 fi
 
-:contb
-
 # construct archive suffix
 
-echo need to change it for Unix date; exit
+SUFFIX=`date -Idate | awk -F- '{ print substr($1,3)$2$3 }'`
+VERSION=
 
-#date /t | %run_awk% -F- "{ print substr($1,3)$2$3 }" > %tempfb%
-#set /P suffix=<%tempfb%
-#set suffix=%suffix:~0,-1%
-#set version=
-
-if [ `ls $ARCHNAME\_$SUFFIX*.tar* | egrep -e $ARCHNAME\_$SUFFIX'(|\..*).tar(|\.bz2)' | wc -l` -gt 1 ]; then
-
-echo make up correct suffix and version; exit
-
-#dir/b %archname%_%suffix%_*.tar* 2>NUL | %run_awk% -F.tar "{ print $1 }" > %tempfa%
-#%run_awk% -F_ "{ if (($NF ~ /^[0-9]+$/) && ($NF>nn)) nn=$NF; }; END{ print nn+1 }" %tempfa% > %tempfb%
-#set /P vvv=<%tempfb%
-#set version=_%vvv%
-
+APREF=$ARCHNAME\_$SUFFIX
+TARLIST=`ls $APREF*.tar* 2>/dev/null | egrep -e $APREF'(|_.*).tar(|\.bz2)'`
+if [ `echo "$TARLIST" | wc -w` -gt 0 ]; then
+   VERSION=_`echo "$TARLIST" | awk -F.tar '{ print $1 }' | awk -F$APREF\_ '{ if (($2 ~ /^[0-9]+$/) && ($2>nn)) nn=$2; }; END{ print nn+1 }'`
 fi
 
 # remove comments after #; removes leading and trailing whitespace; removes empty lines
 
-awk -F# '{ gsub(/^[ \t]+|[ \t]+$/, "", $1); if (length($1)>0) print $1 }' $JOBLIST > $TEMPFA
+for NM in $JOBLIST `awk -F# '{ gsub(/^[ \t]+|[ \t]+$/, "", $1); if (length($1)>0) print $1 }' $JOBLIST`; do
 
-# process list and add to tar joblist
+    if [ -d $NM ]; then echo $NM; if [ -f $NM.sln ]; then echo $NM.sln; fi; fi
+    if [ -f $NM ]; then echo $NM; fi
 
-echo replace it for Unix style proc call; exit
+done > $TEMPFA
 
-#for /F "tokens=*" %%A in (%tempfa%) do call :sub_add %tempfb% %%A
-#call :sub_add %tempfb% %joblist%
+# verify job file
 
-if [ `cat $TEMPFB | wc -l` -eq 0 ]; then echo "Empty job - no projects, directories, or files to process."; exit 1; fi
+if [ `cat $TEMPFA | wc -l` -eq 0 ]; then echo "Empty job - no projects, directories, or files to process."; exit 1; fi
 
 # finally, lets get it running
 
-tar cf $ARCHNAME\_$SUFFIX$VERSION.tar -T $TEMPFB -p --exclude=\*.suo --numeric-owner > /dev/null
-rm $TEMPFB
+tar cf $ARCHNAME\_$SUFFIX$VERSION.tar -T $TEMPFA -p --exclude=\*.suo --numeric-owner > /dev/null
+rm $TEMPFA
 
 bzip2 -9 $ARCHNAME\_$SUFFIX$VERSION.tar
 
@@ -97,42 +86,6 @@ echo "" >> archive_self_test.txt
 
 awk '{ pk=4+length($3); printf $4 " " $5 " " substr("          " $3, (pk<11?pk:11)); for (i=6; i<=NF; i++) printf " " $i; print "" }' $TEMPFA >> archive_self_test.txt
 rm $TEMPFA
-
-exit
-
-
-
-
-:sub_add
-
-if "%~2" == "" exit/b
-
-for %%i in (%2) do if not exist %%~si\NUL goto :notdir
-
-echo %~2/>> %1
-
-if exist "%~2.sln" echo %~2.sln>> %1
-rem if exist "%~2.suo" echo %~2.suo>> %1
-
-exit/b
-
-
-:notdir
-if not exist "%~2" goto :badentry
-rem echo Warning: "%2" is a file
-
-echo %~2>> %1
-
-exit/b
-
-
-:badentry
-echo Error, "%~2" is neither project, nor directory, nor file
-
-del %tempfa%
-del %tempfb% 2>/NUL
-
-exit
 
 
 
