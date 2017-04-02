@@ -50,16 +50,3 @@
 #define _ttoi atoi
 #endif
 
-// for atomic operations:
-
-#if defined(_WIN32)
-#include<intrin.h>
-#define ATOMIC_ALIGN __declspec(align(32))
-inline int my_atomic_add(volatile int *ptr, int val) { return _InterlockedExchangeAdd((volatile LONG *)ptr, val); }
-#elif defined(__GNUC__)
-#define ATOMIC_ALIGN
-#define my_atomic_add __sync_fetch_and_add
-#else
-#warning Atomic add is not supported outside MS Visual Studio 2008+ or GCC v4.4+
-#define my_atomic_add(ptr,val) (*(ptr)+=(val), *(ptr)-(val))   // this is not atomic at all, of course, not even evaluation-safe
-#endif

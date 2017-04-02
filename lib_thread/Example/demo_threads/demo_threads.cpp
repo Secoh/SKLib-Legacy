@@ -18,6 +18,7 @@ template<class input_t> inline input_t Max(const input_t &A, const input_t &B) {
 // -- end of compatibility block
 
 #include "../../mtc.hpp"
+#include "../../atomic.hpp"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -178,10 +179,10 @@ public:
 class atomic_th : public local_thread_t
 {
 public:
-    volatile int * volatile V;                      // lets make is exactly same as Example 5...
+    volatile atomic_uint32_t * volatile V;                   // lets make is exactly same as Example 5...
     volatile int t;
-    atomic_th(int *data, int inc) { V=data; t=inc; }
-    void thread_code() { for (int i=0; i<MILLIONS; i++) my_atomic_add(V, t); }    // ...except using atomics
+    atomic_th(atomic_uint32_t *data, int inc) { V=data; t=inc; }
+    void thread_code() { for (int i=0; i<MILLIONS; i++) atomic_fetch_and_add(V, t); }   // ...except using atomics
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -400,14 +401,14 @@ int _tmain(int argc, _TCHAR* argv[])
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 6. Compare to atomic add
 
-    ATOMIC_ALIGN int AtomicCount = 0;               // some versions of MSDN says it must be aligned by 32-bit boundary
+    ATOMIC_ALIGN atomic_uint32_t AtomicCount = 0;   // some versions of MSDN says it must be aligned by 32-bit boundary
     atomic_th **AX = new atomic_th*[NO_THREADS];    // some other versions of MSDN don't say anything on alignment
 
     for (int i=0; i<NO_THREADS; i++) AX[i] = new atomic_th(&AtomicCount, 1);
     for (int i=0; i<NO_THREADS; i++) AX[i]->run();
     atomic_th::wait_all(AX, NO_THREADS);
 
-    printf("Atomic Demo: Expected count=%d; Actual=%d\n", NO_THREADS*MILLIONS, AtomicCount);
+    printf("Atomic Demo: Expected count=%d; Actual=%u\n", NO_THREADS*MILLIONS, (unsigned int)AtomicCount);
 
     //
 
