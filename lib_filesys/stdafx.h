@@ -34,9 +34,3 @@
 
 #include<wchar.h>     // UTF Initiative
 
-
-// can include or exclude reference to full gcc/Linux portability header
-
-#ifndef STANDALONE_EXAMPLE
-#include"../lib_common/gcc_port.h"
-#endif

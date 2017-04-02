@@ -1,7 +1,14 @@
 General stdafx.h file
 -------------------------------
 
-	// stdafx.h : standard headers
+// stdafx.h : standard headers
+//
+// Copyright [2016-2017] Secoh
+//
+// Licensed under the Apache License, Version 2.0 (the "License") - see http://www.apache.org/licenses/LICENSE-2.0
+// You may not use this file except in compliance with the License.
+// Software is distributed on "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//
 
 #pragma once
 #define _CRT_NONSTDC_NO_DEPRECATE   // no more stupid non-ANSI warnings
@@ -30,12 +37,6 @@ General stdafx.h file
 
 #include<wchar.h>     // UTF Initiative
 
-// can include or exclude reference to full gcc/Linux portability header
-
-#ifndef STANDALONE_EXAMPLE
-#include"../lib_common/gcc_port.h"
-#endif
-
 
 
 Less common entries
@@ -49,6 +50,12 @@ Less common entries
 #ifndef __GNUC__
 #include<conio.h>
 #endif
+
+// can include or exclude reference to full gcc/Linux portability header
+#ifndef STANDALONE_EXAMPLE
+#include"../lib_common/gcc_port.h"
+#endif
+
 
 
 Uncommon

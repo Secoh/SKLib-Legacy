@@ -14,7 +14,8 @@
 // Visual Studio documentation at some point requires that variables for atomic operations shall be aligned to 32-bit boundary
 #define ATOMIC_ALIGN __declspec(align(32))
 
-// Shortcuts if we need an int with soecific bit dapth - use them just like an int type. (Notice that 'int' and 'unsigned' types also work if use "long" version.)
+// Shortcuts if we need an int with specific bit depth - use them just like an int type.
+// Visual Studio doesn't have separate _InterlockedExchangeAdd() intrinsic for 16-bit and 8-bit integer, so must use long type for all.
 typedef long atomic_int8_t;
 typedef unsigned long atomic_uint8_t;
 typedef long atomic_int16_t;
@@ -24,14 +25,14 @@ typedef unsigned long atomic_uint32_t;
 typedef __int64 atomic_int64_t;
 typedef unsigned __int64 atomic_uint64_t;
 
-// Using the atomic int types above shall be transparent to C++ program, because the standard requires integer promotion, and size of long is size of int,
-// and the overflow condition is handled the same way by hardware regardless of signed/unsigned type.
+// Using the atomic int types above shall be transparent to C++ program, because the standard requires integer promotion, and size of long is size of int
+// Overflow condition is handled the same way by hardware regardless of signed/unsigned type.
 // However, fully correct way to use the variable is to make explicit cast before it goes into expression, like the following:
 // { atomic_uint_16_t V=0; atomic_fetch_and_add(&V,1); printf("%u\n", (uint16_t)V); }
 // The atomic type casts shall also work on pointers, but only on Lower-Byte-First architectures.
 
 // Supported operations
-// Sadly, once required to use int/long to cover for shorter types, we cannot undo it and must use int32 for all remaining operations.
+// Sadly, once required to use int/long to cover for shorter types, we cannot undo it and must use int32 for all remaining functions
 
 inline long            atomic_fetch_and_add(volatile long            *ptr, long            val) { return _InterlockedExchangeAdd(ptr, val); }
 inline unsigned long   atomic_fetch_and_add(volatile unsigned long   *ptr, unsigned long   val) { return (unsigned long)_InterlockedExchangeAdd((volatile long *)ptr, (long)val); }

@@ -7,6 +7,10 @@
 // Software is distributed on "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //
 
+
+/* Lets not release it yet
+
+
 __GNUC__
 
 
@@ -36,3 +40,8 @@ __GNUC__
 //
 #include<io.h>
 #define x_isftty(file) (_isatty(_fileno(file)))		// use with stdin/out/err
+
+
+*/
+
+

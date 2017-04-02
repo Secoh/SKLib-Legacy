@@ -10,9 +10,9 @@ Enforcing compatibility:
 
 The library collection resorts, when possible, to the ANSI C and C++ common standards supported by all platforms. "Handy" extensions were deliberately avoided in the code. When common standard doesn't exist and the functionality is too valuable to drop, the wrapper layer is created to hide implementation details from the caller. In all other cases, the functionality is either written from scratch, or left missing.
 
-In very few cases when an utility is needed and establishing compatibility is too expensive, the code is programmed to fail at compilation time.
+In very few cases when an utility is badly needed and establishing compatibility is too expensive, the code is programmed to fail at compilation time.
 
-Primary target: Windows XP or higher, 32-bit code, C++. Next priority is 32-bit/64-bit comatibility. Next is potential for portability to ANSI C.
+Primary target: Windows XP or higher, 32-bit code, C++. Next priority is GCC/Linux port and 64-bit compatibility. Next is potential for portability to ANSI C.
 
 Modules historically written in C preserve ANSI C compatibility.
 
@@ -23,10 +23,10 @@ Stable projects (relatively):
    lib_thread;
    _texts/stdafx_h_standard_file_contents.txt;
    ./arch.bat;
+   ./arch.sh;
    ./compile.sh
 
 In development or unusable:
    lib_common;
    lib_filesys;
-   ./arch.sh
-
+   test_bench
