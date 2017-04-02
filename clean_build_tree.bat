@@ -1,5 +1,5 @@
 @echo off
-del /q *.ncb > nul 2>&1
+del /s /q *.ncb > nul 2>&1
 del /q /s /f _tmp\*.* > nul 2>&1
 del /q _Debug\*.ilk > nul 2>&1
 del /q _Debug\*.pdb > nul 2>&1
