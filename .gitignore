@@ -21,6 +21,7 @@ UpgradeLog*.htm
 archive_self_test.txt
 _elf_bin/
 _tmp/
+*.tar.bz2
 [Dd]ebug/
 [Rr]elease/
 x64/
