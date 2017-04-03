@@ -10,11 +10,12 @@
 #if defined(_WIN32)
 
 #include<conio.h>
-
+#define kbhit _kbhit
 #elif defined(__GNUC__)
 
 // lets just rewrite and declare missing functions
 char getch();
+int kbhit();
 
 #endif
 

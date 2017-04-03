@@ -1,18 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_bench", "test_bench\test_bench.vcproj", "{2EAB4DA0-E589-45BD-9923-625E0F189BF1}"
-	ProjectSection(ProjectDependencies) = postProject
-		{CC2ADE18-DED5-420A-9BF2-EEB714BCA3E8} = {CC2ADE18-DED5-420A-9BF2-EEB714BCA3E8}
-		{40375A8F-9786-4A14-AA79-51EAB7A7A810} = {40375A8F-9786-4A14-AA79-51EAB7A7A810}
-	EndProjectSection
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_bench", "test_bench\test_bench.vcxproj", "{2EAB4DA0-E589-45BD-9923-625E0F189BF1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib_filesys", "lib_filesys\lib_filesys.vcproj", "{40375A8F-9786-4A14-AA79-51EAB7A7A810}"
-	ProjectSection(ProjectDependencies) = postProject
-		{CC2ADE18-DED5-420A-9BF2-EEB714BCA3E8} = {CC2ADE18-DED5-420A-9BF2-EEB714BCA3E8}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib_filesys", "lib_filesys\lib_filesys.vcxproj", "{40375A8F-9786-4A14-AA79-51EAB7A7A810}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib_common", "lib_common\lib_common.vcproj", "{CC2ADE18-DED5-420A-9BF2-EEB714BCA3E8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib_common", "lib_common\lib_common.vcxproj", "{CC2ADE18-DED5-420A-9BF2-EEB714BCA3E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

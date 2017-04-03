@@ -34,3 +34,6 @@
 
 #include<wchar.h>     // UTF Initiative
 
+// this is how it is normally done - frequintly used AND most simple subset of compatibility functions is placed into gcc_port.h
+
+#include"../lib_common/gcc_port.h"
