@@ -47,6 +47,10 @@
 #include<unistd.h>
 #endif
 
+#ifdef _WIN32
+#include<windows.h>
+#endif
+
 // 2. May want to preserve bogus types, just in case
 
 #if defined(ENABLE_MICSOSOFT_SPECIFIC) && !defined(_WIN32)
@@ -160,7 +164,7 @@ inline bool TestRangeEx(const input_t &x, const input_t &lo, const input_t &hi) 
 // 8. Very few types, functions and operators that shall have existed
 
 typedef unsigned int Int;        // first used in 1992
-typedef unsifned char Char;
+typedef unsigned char Char;
 
 #ifdef __GNUC__
 inline char *strupr(char *str)   // this one is missing from GCC library - unsafe to use for anything except ASCII

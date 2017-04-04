@@ -17,14 +17,18 @@
 *.user
 *.suo
 *.sdf
-UpgradeLog*.htm
 archive_self_test.txt
 _elf_bin/
 _tmp/
 *.tar.bz2
 [Dd]ebug/
+_[Dd]ebug/
 [Rr]elease/
+_[Rr]elease/
 x64/
+_x64_[Dd]ebug/
+_x64_[Rr]elease/
+[Bb]ackup/
 build/
 [Oo]bj/
 *.obj
@@ -46,6 +50,8 @@ ipch/
 *.vspx
 UpgradeLog*.XML
 UpgradeLog*.htm
+*.vcxproj
+*.filters
 
 #############
 ## Windows detritus

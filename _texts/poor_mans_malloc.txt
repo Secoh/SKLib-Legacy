@@ -1,0 +1,114 @@
+/* ANSI C routines to support dynamic memory allocation IF we must have one, and C library malloc() is not an option.
+   Uses int8_t type for a byte
+
+   N.B. #1: Use C++ and normal malloc/new memory management on any modern platform where plenty of RAM is available.
+            (Past 2015, it is easy to say.)
+
+   N.B. #2: Avoid using ANY dynamic memory management on tiny microcontroller platforms if possible at all.
+
+   Having that said, there is C-only library for memory management and garbage collection, capable of operating on tiny RAM footprint.
+   Restrictions:
+     1. No direct memory referencing from pointers. No direct pointers' increments/decrements. See below for details.
+     2. No memory protection or out-of-range testing.
+     3. No type checking for pointers. Uses void* to cover all.
+     4. No multithreading support. Caller must either resolve it on its own, or avoid using allocations from interrupt functions or more
+        than one thread, if any.
+     5. Linear time for garbage collection. Seems OK for small amount of RAM, but could be not ok for large RAM.
+
+   Details on using "memory pointers".
+
+     1. The pointer returned by alloc() is pointer to internal descriptor that keeps memory allocation structure, not to usable memory.
+
+     2. To receive the actual pointer to actual memory, use pointer() function.
+
+     3. Use increment() function to move where the pointer points to. (Implementation details: allowing direct referencing would prohibit
+        garbage collection.) 
+
+     4. Copying the "pointer" must be done by duplicate() function, or it cannot be incremented independently of its original copy.
+        However, if you have only one copy of a pointer, you can use it without copying.
+        Extension to C: calling free() on a descriptor that was modified, is legal.
+
+     5. Allocation functions return either memory descriptors ready for use, or NULL on failure.
+
+   As with normal memory management, freeing something that wasn't allocated, or freeing twice, is prohibited.   */
+
+
+struct tinymem_root
+{
+};
+
+struct tinymem
+{
+    int next;
+    int offset;
+};
+
+/* create structure in the memory that controls memory management */
+tinymem_root *tinymem_init(void *ram_block, size_t length);
+
+/* create and return new memory descriptor */
+struct tinymem *tinymem_alloc(struct tinymem_root *root, size_t size);
+
+/* modify, if possible, the existing memory descriptor and return it in the name */
+struct tinymem *tinymem_realloc(struct tinymem_root *root, struct tinymem *mem, size_t new_size);
+
+/* deallocates memory associated with descriptor */
+void tinymem_free(struct tinymem_root *root, struct tinymem *mem);
+
+/* convert memory descriptor to actual address in RAM */
+void *tinymem_pointer(const struct tinymem *mem);
+
+/* move where the memory descriptor points to, and return the RAM address */
+void *tinymem_increment(struct tinymem *mem, int offset, size_t type_size);
+
+/* copy memory descriptor */
+void *tinymem_duplicate(struct tinymem *destination, const struct tinymem *source);
+
+
+
+
+
+----------------------------------------------------------------------
+
+
+/* The simplified memory management where memory can only be allocated in stack manner.
+   (Notably, many typical malloc() uses follow this pattern!)
+
+   Comparing to the Tinymem manager, there is no garbage collection and no pointer mangling.
+   It uses and returns the actual pointer to the allocated RAM.
+
+   There is NEW RESTRICTION: Stackmem cannot allocate "memory resident objects".
+   I.e., if free(address) is called, it destroys all memory allocations done after
+   the corresponding call to alloc() that returned the address.   */
+
+
+struct stackmem_root
+{
+    void *base_address;
+    size_t amount_maximum;
+    size_t amount_used;
+};
+
+/* create structure in the memory that controls memory management */
+struct stackmem_root *stackmem_init(void *ram_block, size_t length);
+
+/* mark block of RAM as used and return its address */
+void *stackmem_alloc(struct stackmem_root *root, size_t size);
+
+/* return first available arddress (top of the stack) */
+void *stackmem_baseline(const struct stackmem_root *root);
+
+/* revert "memory allocation" to the state of older baseline
+   (works just like free() if called in reverse order compared to alloc() calls)
+   due to the nature of memory structure, no need to call more than once to
+   destroy series of memory allocations */
+void stackmem_free(struct stackmem_root *root, void *baseline);
+
+
+
+
+
+
+
+
+

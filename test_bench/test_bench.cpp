@@ -10,9 +10,32 @@
 
 #include "stdafx.h"    // this file automatically includes gcc_port.h
 
+#include "../lib_filesys/cio.h"
+
+#define GETCH "getch"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+    if (argc<2)
+    {
+        printf("Usage: %s module [parameters ... ]\n"
+"Available module names are:\n"
+GETCH " - Test for no-echo blocking input\n", argv[0] );
+        exit(0);
+    }
+
+    if (!strnicmp(argv[1], GETCH, dim(GETCH)-1))
+    {
+        while (true)
+        {
+            char c[2];
+            memset(c, 0, sizeof(c));
+            if (kbhit()) c[0] = getch();
+            printf("%s\n", (*c ? c : "press key") );
+            Sleep(333);
+        }
+    }
+
 	return 0;
 }
 
