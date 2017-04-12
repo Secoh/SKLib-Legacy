@@ -11,6 +11,7 @@
 #include "stdafx.h"    // this file automatically includes gcc_port.h
 
 #include "../lib_filesys/cio.h"
+#include "../lib_filesys/dir.h"
 
 #define GETCH "getch"
 

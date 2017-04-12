@@ -104,7 +104,7 @@ typedef uint8_t  __uint8;
 #define fseek64 _fseeki64
 #define atoi64 _atoi64
 // #define atoll _atoi64  // don't
-#define isnan _isnan
+//#define isnan _isnan
 #elif defined(__GNUC__)
 #define stricmp strcasecmp
 #define strnicmp strncasecmp
