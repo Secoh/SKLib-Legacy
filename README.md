@@ -14,7 +14,7 @@ In very few cases when an utility is badly needed and establishing compatibility
 
 Primary target: Windows XP or higher, 32-bit code, C++. Next priority is GCC/Linux port and 64-bit compatibility. Next is potential for portability to ANSI C.
 
-Modules historically written in C preserve ANSI C compatibility.
+Modules historically written in C preserve ANSI C compatibility, unless it doesn't make sense anymore.
 
 When possible, compatibility with Linux any modern version and GCC 4.4.x or higher is maintained, if not precluded by nature of the program.
 
