@@ -163,62 +163,8 @@ inline bool TestRangeEx(const input_t &x, const input_t &lo, const input_t &hi) 
 
 // 8. Very few types, functions and operators that shall have existed
 
-typedef unsigned int Int;        // first used in 1992
-typedef unsigned char Char;
-
-#ifdef __GNUC__
-inline char *strupr(char *str)   // this one is missing from GCC library - unsafe to use for anything except ASCII
-{
-    char *s1 = str;
-    while (char c = *str) *str++ = toupper(c);
-    return s1;
-}
-#endif
-
-// similar to strupr(), convert all string to lower case - unsafe to use for anything except ASCII
-inline char *strlow(char *str)
-{
-    char *s1 = str;
-    while (char c = *str) *str++ = tolower(c);
-    return s1;
-}
-
-// crossbreed between stricmp and memcmp, missing from standard C library - unsafe to use for anything except ASCII
-inline int memicmp(const void *s1, const void *s2, size_t n)
-{
-    const uint8_t *m1 = (const uint8_t *)s1;
-    const uint8_t *m2 = (const uint8_t *)s2;
-
-    for (size_t i=0; i<n; i++)
-    {
-        int C1 = tolower((int)(m1[i]));
-        int C2 = tolower((int)(m2[i]));
-        if (C1 < C2) return (-1);
-        if (C1 > C2) return 1;
-    }
-
-    return 0;
-}
-
-// enforce 1/0 conversion from bool -- useful if argument is int interpreted as bool
-// or to suppress warning of type truncation
-#define bool_int(a) ((a)?1:0)
-
-// logical xor: check if logical A not the same as B -- missing "operator ^^"
-// similar, allows no-thought use of int types
-#define bool_xor(a,b) (bool_int(a) != bool_int(b))
-
-// clean explicit conversion from integer expression to bool
-#define bool_cast(v) ((v)!=0)
-
-// get dimension of the array
-#define dim(a) (sizeof(a)/sizeof(*(a)))
-#define idim(a) ((int)dim(a))             // <-- when A length is not big enough to overflow int;
-
-// standard block sizes
-//#define KB(x) (1024*(x))
-//#define MB(x) (1048576*(x))
-//#define GB(x) (1073741824*(x))
+#include"def_c.h"
+#include"func_c.h"
 
 
 //
