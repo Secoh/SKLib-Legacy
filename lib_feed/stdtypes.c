@@ -12,6 +12,38 @@
 #include"stdtypes.h"
 
 
+
+
+
+bool filter_int_init(unsigned long type_designator, struct filter_collector_t *env)
+{
+    
+
+enum { FILTER_INT_BREAK = -1; };   /* special "character" to signal end of stream */
+
+int filter_int(int c, void *ienv)    /* alphabet: 0-9, A-F, x, -, + */
+{
+    if (c == FILTER_INT_BREAK)
+    {
+        
+        return FLT_FINISH;
+    }
+
+    if (enabled_exp && (c == 'e' || c == 'E'))
+    {
+        entry_exp
+    }
+
+    if (c < '0' || c > '9')
+    {
+
+    }
+
+
+
+
+
+
 extern "C"
 {
 
@@ -27,3 +59,28 @@ int filter_int(int ch, void *result)
 
 /* end of extern "C" */
 };
+
+
+
+
+
+
+
+
+/* returns true if can add i to v, advanced by radix r, and then v has new number (v:=v*r+i);
+   false if overflow, then v doesn't change
+   r is radix, a and b are accumulators of same type as v
+   convention: i>0: positive numbers; i<0: negative numbers; i=0: positive or negative (no difference)  */
+
+#define IADVANCE(v,a,b,r,i) \
+( ((a)=((b)=(v))*(r)), ((a)/(r) != (b)) ? 0 : (((b)=(a)+(i)), ((((i)>0 && (b)<(a)) || ((i)<0 && (b)>(a))) ? 0 : (((v)=(b)), 1))) )
+
+/* updates floating point number, no check
+   when m <= -1, adds up v radix r increment i, like integers, with same convention i>0/i<0
+   after decimal dot, caller must set m:=1, and then send next i normally
+   macros will track value's sign, m, and decimal fraction
+   v and m must be floating point variables; r, i may be integers  */
+
+#define FADVANCE(v,r,i,m) ( (v) = (((m)<0) ? ((v)*(r)+(i)) : ((v)+((m)/=(r))*(i))) )
+
+

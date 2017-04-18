@@ -1,6 +1,8 @@
 /* Parser filters for standard C/C++ values
 
-   Efficient manipulation of serialized data streams for small microcomputing platforms without dynamic memory allocations (C-only)
+   Efficient manipulation of serialized data streams with focus on small microcomputing platforms
+   without dynamic memory allocations (C-only).
+   Support for unrestricted data types (strings and arrays) on larger systems where full C++ is available.
 
    Copyright [2016-2017] Secoh
 
@@ -8,6 +10,7 @@
    You may not use this file except in compliance with the License.
    Software is distributed on "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 */
+
 
 #ifndef SKLIB_FEED_STDTYPES
 #define SKLIB_FEED_STDTYPES
@@ -81,6 +84,20 @@ SKLIB_FEED_STDTYPES_NO_WCHAR_T
 #define PAR_INT_WIDTH   0x007F
 
 
+enum  /* type designator & 0xE000 is code */
+{
+    FILTER_TYPE_FEED   = 0x0000,
+    FILTER_TYPE_SWITCH = 0x1000,
+    FILTER_TYPE_BOOL   = 0x2000,
+    FILTER_TYPE_INT    = 0x4000,
+    FILTER_TYPE_UINT   = 0x6000,
+    FILTER_TYPE_FLOAT  = 0x8000,
+    FILTER_TYPE_LETTER = 0xA000,
+    FILTER_TYPE_STRING = 0xC000,  /* output is C++ string, wstring, or vector; not supported on small platforms */
+/* 0xE000 reserved */
+
+    FILTER_TYPE_MAJOR  = 0xE000   /* mask for selecting "high" part of the type designator */
+};
 
 
 
@@ -90,10 +107,11 @@ SKLIB_FEED_STDTYPES_NO_WCHAR_T
 
 
 
-enum { flt_int_ch_break = -1; };
 
-struct 
-filter_int_collector_t
+
+/* INT and UINT types */
+
+struct filter_collector_t
 {
     union
     {
@@ -111,10 +129,48 @@ filter_int_collector_t
         int64_t val_64;
         uint64_t val_u64;
 #endif
+#ifdef __cplusplus
+        void *pvect;
+#endif
     };
 
-    int control;   /* expected data type, signed flag, actual sign, etc options
+    union
+    {
+        unsigned long int_control;   /* expected data type, signed flag, etc options; also actual sign, exponent entry */
+        unsigned long float_control;
+    };
 };
+
+enum
+{
+    FILTER_INT_UNSIGNED  = 0x8000,  /* 1 unsigned, 0 signed int */
+    FILTER_INT_EVT_SIGN  = 0x4000,  /* set if "-" sign is observed */
+    FILTER_INT_EVT_EXP   = 0x2000   /* set if exponent entry is in progress */
+
+    FILTER_INT_EXP_ON    = 0x1000,  /* 0x1FFF block - "lower" part of type designator */
+    FILTER_INT_RADIX_ON  = 0x0800,
+    FILTER_INT_OCT_OFF   = 0x0400,
+    FILTER_INT_CTYPE     = 0x0200,
+    FILTER_INT_TYPE_MASK = 0x0180,
+    FILTER_INT_CHAR      = 0x0000,
+    FILTER_INT_INT       = 0x0080,
+    FILTER_INT_LONG      = 0x0100,
+    FILTER_INT_8         = 0x0000,
+    FILTER_INT_16        = 0x0080,
+    FILTER_INT_32        = 0x0100,
+    FILTER_INT_64        = 0x0180,
+    FILTER_INT_COUNT_MASK= 0x007F,  /* range 1..127 positions for fixed arrays (=0 for one element, =1 is 2, etc, 0x7F is reserved for C++ vector */
+    FILTER_INT_VECTOR    = 0x007F,  /* C++ vector of respective INT types on unrestricted platform - not available on some microcontrollers       */
+};
+
+
+bool filter_int_init(unsigned long type_designator, struct filter_int_collector_t *env);
+
+enum { FILTER_INT_BREAK = -1; };   /* special "character" to signal end of stream */
+
+int filter_int(int c, void *ienv);
+
+
 
 
 
