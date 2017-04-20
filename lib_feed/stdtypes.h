@@ -29,7 +29,7 @@ bool, wchar_t, (u)int8, 16, 32, 64 - if available
 SKLIB_FEED_STDTYPES_NO_SIZED_INTS
 
 
-SKLIB_FEED_STDTYPES_NO_WCHAR_T
+xxx SKLIB_FEED_STDTYPES_NO_WCHAR_T xxx
 
 
 

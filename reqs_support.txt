@@ -1,0 +1,104 @@
+Requirements for support
+---------------------------------
+
+0. Definitions
+
+  - Required, must: feature is guaranteed, new code must satisfy
+    the condition or else be deemed invalid.
+
+  - Recommended, shall: support is anticipated, absence of the feature
+    must be justified.
+
+  - Not required, optional: otherwise notable feature may be missing
+    without harm to overall functionality of application.
+
+
+1. Platforms
+
+There are 2 major kinds of computing platforms it is planned to support.
+
+  A) Microcontrollers or microcomputers - generally characterized by:
+      - very small available RAM (normally, in range 1-48 Kbytes);
+      - relatively slow, single CPU;
+      - no hardware support for multithreading;
+      - no memory protection;
+      - extensive hardware exposure is norm;
+      - no operating system;
+      - no common interfaces except basic serial I/O.
+
+  For micro-platforms, it is often impractical to use dynamic memory
+  allocation, such as malloc() function or new operator.
+  C++ compiler is not always available, too.
+
+  B) Large size systems, such as modern personal computer:
+      - hardware multithreading support;
+      - large amounts of addressable memory (over 100 MB is norm);
+      - multiple cores and/or multithreading support in standard libs;
+      - OS functions, support dynamic modules, file system,
+        internation languages support, etc;
+      - modern compilers, C++ support.
+
+  Examples of large system are modern PC with Windows 2K and higher,
+  Linux systems, Raspberry Pi, Android, etc.
+
+  Examples of micro-platforms are 8086+DOS, MSX, Arduino, ez80, etc.
+
+  There are platforms with capacities well in between.
+  However, it is impractical to support them specifically.
+
+
+2. What are the assumptions and compatibility observations.
+
+  - All platforms support ANSI C standard defined as C89;
+
+  - Where C++ is supported,
+     *) program must compile and run under C++98;
+     *) program shall also compile and run with C++11;
+
+  - If code is shared between C and C++, more restrictive standard
+    shall be oberrved. Specifically:
+     *) functions without arguments shall be declared as functions
+        from void: int func(void), unless it is clear from context
+        that this function could be used in C++ environment only;
+     *) some char constants shall be avoided: \a \b \e \u<nnnn>.
+     *) the shared code must compile and work identically both
+        in C and C++, specifically:
+         # no function overloading or default arguments;
+         # struct, union, enum types shall be properly called;
+         # variables are declared at beginning of the block only.
+
+  - When minimum size of type is required, here is standard subset:
+     *) char - 1 byte or more;
+     *) int - 2 bytes or more;
+     *) long - 4 bytes or more;
+     *) with C++, long long is 8 bytes (or more).
+
+  - Type wchar_t is different in Windows MSVC and in UNIX GCC.
+    Wide string std::wstring is unusable UNLESS all text is limited
+    to Basic Plane of Unicode. In many cases, use of unsigned long
+    as Unicode character shall be considered.
+  
+  - When C++ is used, presence of sized integer types is implied:
+    (u)intN_t, where N=8, 16, 32, *64 (* - must be optional).
+    Limited support is provided for situations C/intN and C++/no intN,
+    but exact portability is not required.
+
+
+3. Multilingual support
+
+  - ASCIIZ with 8-bit extension to handle unspecified legacy codepage
+    is always supported no matter what.
+
+  - Latin and Cyrillic letters must be supported where relevant;
+    shall be reasonable provizions to support other 1-byte alphabets.
+
+  - All new programs must support Unicode interface through UTF-8.
+
+  - Code with strict Unicode support must use long as base type.
+
+  - Sequence of chars is either plain ASCII or UTF-8 text.
+
+  - Type wchar_t shall be considered UTF-16. Wchar_t input in Linux
+    shall be transformed either to series of long, or converted to
+    UTF-16 if wchar_t is to be preserved.
+
