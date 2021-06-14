@@ -1,4 +1,8 @@
-# SKLib
+# SKLib-Legacy
+
+**This repository is the early attempt to summarize my C/C++ experience.
+It is still functional and it may be populated with more projects going forward,
+but it is considered outdated and is NOT supported. Use SKLib instead.**
 
 Windows/Linux Utility Libraries (Common API, UI, Math, Etc)
 
